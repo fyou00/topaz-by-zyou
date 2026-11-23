@@ -1,95 +1,176 @@
 {
-  "version": "1",
+  "version": "1795452057512",
   "original": {
     "file": "original.mp4",
     "poster": "original.jpg",
     "hasPoster": false,
-    "width": 1920,
+    "width": 1080,
     "height": 1080,
     "duration": 0,
     "sizeBytes": 0
   },
   "presets": {
-    "preset-01": {
-      "file": "preset-01.mp4",
-      "poster": "preset-01.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-blue-beats": {
+      "file": "CC BLUE BEATS.mp4",
+      "poster": "cc-blue-beats.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 9.98,
+      "sizeBytes": 1140378
     },
-    "preset-02": {
-      "file": "preset-02.mp4",
-      "poster": "preset-02.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-blue-bloom": {
+      "file": "CC BLUE BLOOM.mp4",
+      "poster": "cc-blue-bloom.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1664004
     },
-    "preset-03": {
-      "file": "preset-03.mp4",
-      "poster": "preset-03.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-blue-light": {
+      "file": "CC BLUE LIGHT.mp4",
+      "poster": "cc-blue-light.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1048534
     },
-    "preset-04": {
-      "file": "preset-04.mp4",
-      "poster": "preset-04.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-blue-soft": {
+      "file": "CC BLUE SOFT.mp4",
+      "poster": "cc-blue-soft.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.6,
+      "sizeBytes": 2394565
     },
-    "preset-05": {
-      "file": "preset-05.mp4",
-      "poster": "preset-05.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-deep-blue": {
+      "file": "CC DEEP BLUE.mp4",
+      "poster": "cc-deep-blue.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1140489
     },
-    "preset-06": {
-      "file": "preset-06.mp4",
-      "poster": "preset-06.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-dream-glow": {
+      "file": "CC DREAM GLOW.mp4",
+      "poster": "cc-dream-glow.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 990501
     },
-    "preset-07": {
-      "file": "preset-07.mp4",
-      "poster": "preset-07.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-dream-haze": {
+      "file": "CC DREAM HAZE.mp4",
+      "poster": "cc-dream-haze.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1101497
     },
-    "preset-08": {
-      "file": "preset-08.mp4",
-      "poster": "preset-08.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-dream-soft": {
+      "file": "CC DREAM SOFT.mp4",
+      "poster": "cc-dream-soft.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 682748
     },
-    "preset-09": {
-      "file": "preset-09.mp4",
-      "poster": "preset-09.jpg",
-      "hasPoster": false,
-      "width": 1920,
-      "height": 1080,
-      "duration": 0,
-      "sizeBytes": 0
+    "cc-honey-glow": {
+      "file": "CC HONEY GLOW.mp4",
+      "poster": "cc-honey-glow.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.62,
+      "sizeBytes": 2615320
+    },
+    "cc-nature-glow": {
+      "file": "CC NATURE GLOW.mp4",
+      "poster": "cc-nature-glow.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1368780
+    },
+    "cc-pink-bloom": {
+      "file": "CC PINK BLOOM.mp4",
+      "poster": "cc-pink-bloom.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.62,
+      "sizeBytes": 1595356
+    },
+    "cc-soft-clean": {
+      "file": "CC SOFT CLEAN.mp4",
+      "poster": "cc-soft-clean.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1140197
+    },
+    "cc-soft-fresh": {
+      "file": "CC SOFT FRESH.mp4",
+      "poster": "cc-soft-fresh.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1451179
+    },
+    "cc-soft-peach": {
+      "file": "CC SOFT PEACH.mp4",
+      "poster": "cc-soft-peach.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1376731
+    },
+    "cc-sunny-fresh": {
+      "file": "CC SUNNY FRESH.mp4",
+      "poster": "cc-sunny-fresh.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1050958
+    },
+    "sharpen": {
+      "file": "SHARPEN.mp4",
+      "poster": "sharpen.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 1016573
+    },
+    "sharpen-v2": {
+      "file": "Sharpen V2.mp4",
+      "poster": "sharpen-v2.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.62,
+      "sizeBytes": 1417762
+    },
+    "topaz": {
+      "file": "TOPAZ.mp4",
+      "poster": "topaz.jpg",
+      "hasPoster": true,
+      "width": 720,
+      "height": 720,
+      "duration": 10.7,
+      "sizeBytes": 794736
     }
   }
 }

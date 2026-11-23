@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { CC_PRESETS, ORIGINAL_CLIP } from '../src/data/presets.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = path.resolve(__dirname, '..');
@@ -10,26 +11,14 @@ const PUBLIC_VIDEOS_DIR = path.join(WEB_ROOT, 'public', 'videos');
 const POSTERS_DIR = path.join(PUBLIC_VIDEOS_DIR, 'posters');
 const MANIFEST_PATH = path.join(WEB_ROOT, 'src', 'data', 'video-manifest.json');
 
-const CLIP_IDS = [
-  'original',
-  'preset-01',
-  'preset-02',
-  'preset-03',
-  'preset-04',
-  'preset-05',
-  'preset-06',
-  'preset-07',
-  'preset-08',
-  'preset-09',
-];
-
+const ALL_CLIPS = [ORIGINAL_CLIP, ...CC_PRESETS];
 const SUPPORTED_EXT = new Set(['.mp4', '.mov', '.mkv', '.webm', '.m4v']);
 const WARN_FILE_MB = 5;
 const WARN_TOTAL_MB = 45;
 
 function printHelp() {
   console.log(`
-Optimasi video render After Effects untuk showcase web Topaz by Zyou.
+Optimasi video render After Effects / Topaz untuk showcase web Topaz by Zyou.
 
 Penggunaan:
   npm run optimize:videos [opsi]
@@ -41,8 +30,8 @@ Opsi:
   --mute            Hapus track audio pada semua klip (hemat ukuran file)
   -h, --help        Tampilkan bantuan ini
 
-Nama file yang dikenali di folder input:
-  original.mp4 (atau .mov), serta preset-01.mp4 sampai preset-09.mp4
+Nama file yang dikenali (mengikuti src/data/presets.ts):
+  original.mp4 serta 18 file preset (CC BLUE BEATS.mp4 sampai TOPAZ.mp4, atau id preset)
 `);
 }
 
@@ -102,7 +91,7 @@ function probeVideo(filePath) {
   );
 
   if (res.status !== 0 || !res.stdout) {
-    return { width: 1920, height: 1080, duration: 0 };
+    return { width: 1080, height: 1080, duration: 0 };
   }
 
   try {
@@ -110,12 +99,12 @@ function probeVideo(filePath) {
     const stream = data.streams?.[0] ?? {};
     const dur = Number(data.format?.duration ?? 0);
     return {
-      width: Number(stream.width) || 1920,
+      width: Number(stream.width) || 1080,
       height: Number(stream.height) || 1080,
       duration: Number.isFinite(dur) ? Number(dur.toFixed(2)) : 0,
     };
   } catch {
-    return { width: 1920, height: 1080, duration: 0 };
+    return { width: 1080, height: 1080, duration: 0 };
   }
 }
 
@@ -127,9 +116,15 @@ function findSourceFiles(inputDir) {
     if (!entry.isFile()) continue;
     const ext = path.extname(entry.name).toLowerCase();
     if (!SUPPORTED_EXT.has(ext)) continue;
-    const stem = path.basename(entry.name, path.extname(entry.name)).toLowerCase();
-    if (CLIP_IDS.includes(stem)) {
-      map.set(stem, path.join(inputDir, entry.name));
+    const stemLower = path.basename(entry.name, path.extname(entry.name)).toLowerCase();
+
+    const matched = ALL_CLIPS.find((clip) => {
+      const videoStem = path.basename(clip.videoFile, path.extname(clip.videoFile)).toLowerCase();
+      return stemLower === clip.id.toLowerCase() || stemLower === videoStem;
+    });
+
+    if (matched) {
+      map.set(matched.id, path.join(inputDir, entry.name));
     }
   }
   return map;
@@ -213,13 +208,13 @@ function main() {
 
   if (!fs.existsSync(opts.inputDir)) {
     console.error(`[ERROR] Folder input belum ditemukan: ${opts.inputDir}`);
-    console.error('Buat folder tersebut dan taruh file original.mp4 / preset-01.mp4 .. preset-09.mp4.');
+    console.error('Buat folder tersebut dan taruh file original.mp4 serta 18 klip preset dari src/data/presets.ts.');
     process.exit(1);
   }
 
   const sources = findSourceFiles(opts.inputDir);
   if (sources.size === 0) {
-    console.error(`[ERROR] Tidak ada file berawalan original atau preset-01..preset-09 di ${opts.inputDir}`);
+    console.error(`[ERROR] Tidak ada file video yang cocok dengan daftar preset di ${opts.inputDir}`);
     process.exit(1);
   }
 
@@ -228,19 +223,18 @@ function main() {
 
   console.log(`Memproses ${sources.size} klip dari ${opts.inputDir} (maxSide=${opts.maxSide}px, crf=${opts.crf})...\n`);
 
-  for (const clipId of CLIP_IDS) {
-    const src = sources.get(clipId);
+  for (const clip of ALL_CLIPS) {
+    const src = sources.get(clip.id);
     if (!src) continue;
-    const outMp4 = path.join(PUBLIC_VIDEOS_DIR, `${clipId}.mp4`);
-    const outPoster = path.join(POSTERS_DIR, `${clipId}.jpg`);
-    console.log(`-> Mengompresi ${clipId} (${path.basename(src)})...`);
+    const outMp4 = path.join(PUBLIC_VIDEOS_DIR, clip.videoFile);
+    const outPoster = path.join(POSTERS_DIR, clip.posterFile);
+    console.log(`-> Mengompresi ${clip.name} (${path.basename(src)})...`);
     encodeClip(src, outMp4, outPoster, opts);
   }
 
-  // Rebuild manifest from every valid clip inside web/public/videos
-  const buildEntry = (clipId) => {
-    const file = `${clipId}.mp4`;
-    const poster = `${clipId}.jpg`;
+  const buildEntry = (clip) => {
+    const file = clip.videoFile;
+    const poster = clip.posterFile;
     const mp4Path = path.join(PUBLIC_VIDEOS_DIR, file);
     const posterPath = path.join(POSTERS_DIR, poster);
     const hasMp4 = fs.existsSync(mp4Path);
@@ -251,7 +245,7 @@ function main() {
         file,
         poster,
         hasPoster,
-        width: 1920,
+        width: 1080,
         height: 1080,
         duration: 0,
         sizeBytes: 0,
@@ -273,34 +267,34 @@ function main() {
 
   const manifest = {
     version: String(Date.now()),
-    original: buildEntry('original'),
+    original: buildEntry(ORIGINAL_CLIP),
     presets: {},
   };
 
   let totalBytes = manifest.original.sizeBytes;
   const warnings = [];
 
-  for (const clipId of CLIP_IDS.slice(1)) {
-    const entry = buildEntry(clipId);
-    manifest.presets[clipId] = entry;
+  for (const preset of CC_PRESETS) {
+    const entry = buildEntry(preset);
+    manifest.presets[preset.id] = entry;
     totalBytes += entry.sizeBytes;
   }
 
   fs.writeFileSync(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
   console.log('\nRingkasan ukuran output di web/public/videos:');
-  const allEntries = [['original', manifest.original], ...Object.entries(manifest.presets)];
-  for (const [id, entry] of allEntries) {
+  const allEntries = [[ORIGINAL_CLIP.name, manifest.original], ...CC_PRESETS.map((p) => [p.name, manifest.presets[p.id]])];
+  for (const [label, entry] of allEntries) {
     if (entry.sizeBytes <= 0) {
-      console.log(`  - ${id.padEnd(10)}: belum ada`);
+      console.log(`  - ${label.padEnd(16)}: belum ada`);
       continue;
     }
     const mb = Number(formatMb(entry.sizeBytes));
     if (mb > WARN_FILE_MB) {
-      warnings.push(`${id}.mp4 berukuran ${mb} MB (disarankan <= ${WARN_FILE_MB} MB agar hemat kuota Vercel)`);
+      warnings.push(`${entry.file} berukuran ${mb} MB (disarankan <= ${WARN_FILE_MB} MB agar hemat kuota Vercel)`);
     }
     console.log(
-      `  - ${id.padEnd(10)}: ${mb.toFixed(2)} MB | ${entry.width}x${entry.height} | ${entry.duration}s | poster=${entry.hasPoster ? 'ya' : 'tidak'}`
+      `  - ${label.padEnd(16)}: ${mb.toFixed(2)} MB | ${entry.width}x${entry.height} | ${entry.duration}s | poster=${entry.hasPoster ? 'ya' : 'tidak'}`
     );
   }
 
@@ -309,7 +303,9 @@ function main() {
   console.log(`Manifest diperbarui: ${path.relative(WEB_ROOT, MANIFEST_PATH)}`);
 
   if (totalMb > WARN_TOTAL_MB) {
-    warnings.push(`Total folder video ${totalMb.toFixed(2)} MB mendekati batas nyaman Vercel Hobby (${WARN_TOTAL_MB} MB). Pertimbangkan CRF sedikit lebih tinggi (24-26) atau pindahkan ke Cloudflare R2.`);
+    warnings.push(
+      `Total folder video ${totalMb.toFixed(2)} MB melebihi batas nyaman Vercel Hobby (${WARN_TOTAL_MB} MB). Pertimbangkan CRF sedikit lebih tinggi (24-26) atau pindahkan ke Cloudflare R2.`
+    );
   }
 
   if (warnings.length > 0) {

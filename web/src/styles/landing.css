@@ -580,15 +580,23 @@
 
 .showcase__video-bar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--space-sm);
   padding-top: var(--space-md);
 }
 
+.showcase__icon-btn {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
 .showcase__video-scrubber {
   flex: 1;
-  min-width: 140px;
+  min-width: 80px;
   min-height: 44px;
   accent-color: var(--color-accent);
   cursor: pointer;
@@ -1199,6 +1207,12 @@
   }
   .showcase__stage-canvas {
     padding: var(--space-xs);
+  }
+  .showcase__video-bar {
+    gap: var(--space-xs);
+  }
+  .showcase__time {
+    font-size: var(--text-xs);
   }
   .showcase__placeholder {
     padding: var(--space-md);

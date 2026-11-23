@@ -3,7 +3,7 @@ import { CC_PRESETS, formatOrderMessage } from './data/presets';
 import { VideoPresetShowcase } from './components/VideoPresetShowcase';
 
 export function App() {
-  const [selectedPresetId, setSelectedPresetId] = useState(CC_PRESETS[2].id);
+  const [selectedPresetId, setSelectedPresetId] = useState(CC_PRESETS[0].id);
   const [ctaCopied, setCtaCopied] = useState('');
 
   const activePreset = CC_PRESETS.find((p) => p.id === selectedPresetId) ?? CC_PRESETS[0];
@@ -69,7 +69,7 @@ export function App() {
             </p>
             <div className="hero__actions">
               <a className="btn" href="#preset-cc">
-                Lihat 9 preset CC
+                Lihat 18 preset
               </a>
               <a className="btn btn--ghost-sky" href="#cara-pesan">
                 Cara pemesanan
@@ -157,9 +157,9 @@ export function App() {
         <section className="catalog" id="preset-cc">
           <div className="container">
             <div className="section-head">
-              <h2 className="section-head__title">Sembilan preset color correction</h2>
+              <h2 className="section-head__title">Delapan belas preset pilihan</h2>
               <p className="section-head__lead">
-                Tonton langsung hasil render After Effects untuk Preset 1 sampai Preset 9 dan bandingkan
+                Tonton langsung 18 hasil render asli After Effects dan Topaz Labs lalu bandingkan
                 dengan video original sebelum memesan.
               </p>
             </div>
@@ -192,8 +192,8 @@ export function App() {
               <li className="services__row">
                 <h3 className="services__row-title">Color Correction After Effects</h3>
                 <p className="services__row-desc">
-                  Pewarnaan konsisten memakai Preset 1 sampai Preset 9 yang disesuaikan dengan pencahayaan
-                  klip aslimu.
+                  Pewarnaan konsisten memakai pilihan preset CC dari katalog yang disesuaikan dengan
+                  pencahayaan klip aslimu.
                 </p>
               </li>
               <li className="services__row">

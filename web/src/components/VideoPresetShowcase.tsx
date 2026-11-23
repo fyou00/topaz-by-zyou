@@ -39,7 +39,6 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
   const [videoStatus, setVideoStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
   const [mediaAspect, setMediaAspect] = useState<{ w: number; h: number }>({ w: 16, h: 9 });
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [failedPosters, setFailedPosters] = useState<Record<string, boolean>>({});
@@ -132,7 +131,6 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
 
     const nextDuration = Number.isFinite(video.duration) ? video.duration : 0;
     setDuration(nextDuration);
-    video.muted = isMuted;
 
     if (
       resumeTimeRef.current > 0 &&
@@ -174,13 +172,6 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
       video.pause();
       setIsPlaying(false);
     }
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    const nextMuted = !isMuted;
-    setIsMuted(nextMuted);
-    if (video) video.muted = nextMuted;
   };
 
   const handleScrub = (nextTime: number) => {
@@ -262,7 +253,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
                 poster={activePosterUrl}
                 playsInline
                 loop
-                muted={isMuted}
+                muted
                 preload="metadata"
                 className={`showcase__video${videoStatus === 'ready' ? ' is-ready' : ''}`}
                 aria-label={`${activeClip.name}: ${activeClip.description}`}
@@ -277,7 +268,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
 
             {videoStatus === 'ready' ? (
               <span className="showcase__badge">
-                {viewMode === 'original' ? 'Original' : `Preset ${activePreset.number}`}
+                {viewMode === 'original' ? 'Original' : activePreset.name}
               </span>
             ) : null}
 
@@ -308,9 +299,26 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
 
         {videoStatus === 'ready' ? (
           <div className="showcase__video-bar">
-            <button type="button" className="btn btn--quiet" onClick={togglePlay}>
-              {isPlaying ? 'Jeda' : 'Putar'}
+            <button
+              type="button"
+              className="btn btn--quiet showcase__icon-btn"
+              aria-label={isPlaying ? 'Jeda video' : 'Putar video'}
+              aria-pressed={isPlaying}
+              title={isPlaying ? 'Jeda' : 'Putar'}
+              onClick={togglePlay}
+            >
+              {isPlaying ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="6.5" y="5" width="4.2" height="14" rx="2.1" />
+                  <rect x="13.3" y="5" width="4.2" height="14" rx="2.1" />
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M8.5 6.35c0-1.16 1.26-1.88 2.26-1.29l8.42 4.95c.98.58.98 2.0 0 2.58l-8.42 4.95c-1 .59-2.26-.13-2.26-1.29V6.35z" />
+                </svg>
+              )}
             </button>
+
             <input
               type="range"
               min={0}
@@ -321,21 +329,77 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
               className="showcase__video-scrubber"
               onChange={(e) => handleScrub(Number(e.target.value))}
             />
+
             <span className="showcase__time num">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
-            <button type="button" className="btn btn--quiet" onClick={toggleMute}>
-              {isMuted ? 'Nyalakan suara' : 'Bisukan'}
-            </button>
-            <button type="button" className="btn btn--quiet" onClick={handleFullscreen}>
-              Layar penuh
-            </button>
+
             <button
               type="button"
-              className="btn btn--quiet"
+              className="btn btn--quiet showcase__icon-btn"
+              aria-label={viewMode === 'original' ? 'Lihat hasil preset' : 'Bandingkan dengan video original'}
+              aria-pressed={viewMode === 'original'}
+              title={viewMode === 'original' ? 'Kembali ke hasil preset' : 'Bandingkan original'}
               onClick={() => handleSelectViewMode(viewMode === 'original' ? 'preset' : 'original')}
             >
-              {viewMode === 'original' ? 'Lihat hasil preset' : 'Bandingkan original'}
+              {viewMode === 'original' ? (
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3.5" y="4.5" width="17" height="15" rx="3" />
+                  <line x1="12" y1="3" x2="12" y2="21" />
+                  <rect x="6" y="7.5" width="4" height="9" rx="1" fill="currentColor" stroke="none" />
+                </svg>
+              ) : (
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3.5" y="4.5" width="17" height="15" rx="3" />
+                  <line x1="12" y1="3" x2="12" y2="21" />
+                  <rect x="14" y="7.5" width="4" height="9" rx="1" fill="currentColor" stroke="none" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="btn btn--quiet showcase__icon-btn"
+              aria-label="Layar penuh"
+              title="Layar penuh"
+              onClick={handleFullscreen}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 9V6.2A2.2 2.2 0 0 1 6.2 4H9" />
+                <path d="M15 4h2.8A2.2 2.2 0 0 1 20 6.2V9" />
+                <path d="M20 15v2.8a2.2 2.2 0 0 1-2.2 2.2H15" />
+                <path d="M9 20H6.2A2.2 2.2 0 0 1 4 17.8V15" />
+              </svg>
             </button>
           </div>
         ) : null}
@@ -358,7 +422,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
         </div>
       </div>
 
-      <div className="preset-grid" role="group" aria-label="Pilihan 9 video preset color correction">
+      <div className="preset-grid" role="group" aria-label="Pilihan 18 video preset">
         {CC_PRESETS.map((preset) => {
           const isSelected = preset.id === activePreset.id;
           const entry = PRESET_MANIFEST[preset.id];
@@ -395,7 +459,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
                         <path d="M7 5L15 10L7 15V5Z" fill="currentColor" />
                       </svg>
                     </span>
-                    <span className="preset-card__slot-label">Video Preset {preset.number}</span>
+                    <span className="preset-card__slot-label">{preset.name}</span>
                     <span className="preset-card__slot-hint">Klik untuk putar di atas</span>
                   </div>
                 )}

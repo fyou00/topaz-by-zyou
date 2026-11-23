@@ -14,8 +14,12 @@ export function normalizeBaseUrl(raw?: string): string {
  */
 export function buildMediaUrl(baseUrl: string, relativePath: string, version?: string): string {
   const base = normalizeBaseUrl(baseUrl);
-  const clean = relativePath.replace(/^\/+/, '');
-  const joined = `${base}/${clean}`;
+  const encodedPath = relativePath
+    .replace(/^\/+/, '')
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  const joined = `${base}/${encodedPath}`;
   const cleanVersion = version?.trim();
   return cleanVersion ? `${joined}?v=${encodeURIComponent(cleanVersion)}` : joined;
 }
