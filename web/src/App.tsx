@@ -1,25 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CC_PRESETS, formatOrderMessage } from './data/presets';
-import { CCTester } from './components/CCTester';
+import { VideoPresetShowcase } from './components/VideoPresetShowcase';
 
 export function App() {
   const [selectedPresetId, setSelectedPresetId] = useState(CC_PRESETS[2].id);
-  const [calibrationOpen, setCalibrationOpen] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return new URLSearchParams(window.location.search).get('calibrate') === '1';
-  });
   const [ctaCopied, setCtaCopied] = useState('');
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'c') {
-        e.preventDefault();
-        setCalibrationOpen((v) => !v);
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
 
   const activePreset = CC_PRESETS.find((p) => p.id === selectedPresetId) ?? CC_PRESETS[0];
 
@@ -36,7 +21,7 @@ export function App() {
   return (
     <>
       <a className="skip" href="#preset-cc">
-        Lewati ke simulator preset CC
+        Lewati ke katalog video preset CC
       </a>
 
       <header className="hero">
@@ -84,7 +69,7 @@ export function App() {
             </p>
             <div className="hero__actions">
               <a className="btn" href="#preset-cc">
-                Coba 9 preset CC
+                Lihat 9 preset CC
               </a>
               <a className="btn btn--ghost-sky" href="#cara-pesan">
                 Cara pemesanan
@@ -172,18 +157,16 @@ export function App() {
         <section className="catalog" id="preset-cc">
           <div className="container">
             <div className="section-head">
-              <h2 className="section-head__title">Uji sembilan preset color correction</h2>
+              <h2 className="section-head__title">Sembilan preset color correction</h2>
               <p className="section-head__lead">
-                Coba langsung tampilan warna Preset 1 sampai Preset 9 memakai sample atau foto dan video
-                milikmu sendiri sebelum memesan.
+                Tonton langsung hasil render After Effects untuk Preset 1 sampai Preset 9 dan bandingkan
+                dengan video original sebelum memesan.
               </p>
             </div>
 
-            <CCTester
+            <VideoPresetShowcase
               selectedPresetId={selectedPresetId}
               onSelectPresetId={setSelectedPresetId}
-              calibrationOpen={calibrationOpen}
-              onCloseCalibration={() => setCalibrationOpen(false)}
             />
           </div>
         </section>
@@ -261,7 +244,8 @@ export function App() {
               <li className="steps-list__item">
                 <h3 className="steps-list__head">Kirim klip dan pilih preset</h3>
                 <p className="steps-list__desc">
-                  Bagikan tautan video mentah beserta nomor preset CC pilihanmu dari simulator di atas.
+                  Bagikan tautan video mentah beserta nomor preset CC pilihanmu dari katalog video di
+                  atas.
                 </p>
               </li>
               <li className="steps-list__item">
@@ -331,15 +315,6 @@ export function App() {
               </li>
               <li>
                 <a href="#cara-pesan">Cara pesan</a>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="site-footer__cal-btn"
-                  onClick={() => setCalibrationOpen((v) => !v)}
-                >
-                  {calibrationOpen ? 'Tutup kalibrasi' : 'Kalibrasi Zyou'}
-                </button>
               </li>
             </ul>
             <p className="site-footer__copy">© 2026 Zyou</p>

@@ -1,0 +1,95 @@
+{
+  "version": "1",
+  "original": {
+    "file": "original.mp4",
+    "poster": "original.jpg",
+    "hasPoster": false,
+    "width": 1920,
+    "height": 1080,
+    "duration": 0,
+    "sizeBytes": 0
+  },
+  "presets": {
+    "preset-01": {
+      "file": "preset-01.mp4",
+      "poster": "preset-01.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-02": {
+      "file": "preset-02.mp4",
+      "poster": "preset-02.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-03": {
+      "file": "preset-03.mp4",
+      "poster": "preset-03.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-04": {
+      "file": "preset-04.mp4",
+      "poster": "preset-04.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-05": {
+      "file": "preset-05.mp4",
+      "poster": "preset-05.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-06": {
+      "file": "preset-06.mp4",
+      "poster": "preset-06.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-07": {
+      "file": "preset-07.mp4",
+      "poster": "preset-07.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-08": {
+      "file": "preset-08.mp4",
+      "poster": "preset-08.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    },
+    "preset-09": {
+      "file": "preset-09.mp4",
+      "poster": "preset-09.jpg",
+      "hasPoster": false,
+      "width": 1920,
+      "height": 1080,
+      "duration": 0,
+      "sizeBytes": 0
+    }
+  }
+}

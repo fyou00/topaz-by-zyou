@@ -7,3 +7,4 @@ dist/
 .env.*
 WhatsApp Image*
 *.rar
+web/raw-exports/
