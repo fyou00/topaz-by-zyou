@@ -162,8 +162,8 @@ export const TOPAZ_ONLY_ORDER_MESSAGE = 'bang zyou, aku mau pesen topaz only';
 
 /** Build the pre-filled WhatsApp order message for a CC preset without duplicating leading "CC ". */
 export function formatOrderMessage(preset: CCPreset): string {
-  const cleanName = preset.name.replace(/^cc\s+/i, '').trim();
-  return `bang zyou, aku mau pesen jastop cc ${cleanName}`;
+  const cleanName = preset.name.replace(/^cc\s+/i, '').trim().toLowerCase();
+  return `bang zyou, aku mau jastop pake cc ${cleanName}`;
 }
 
 /** Build a WhatsApp click-to-chat URL with a URL-encoded pre-filled message. */
