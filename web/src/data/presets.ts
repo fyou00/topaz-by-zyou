@@ -157,6 +157,16 @@ export const CC_PRESETS: CCPreset[] = [
   },
 ];
 
+export const WHATSAPP_NUMBER = '62895425075696';
+export const TOPAZ_ONLY_ORDER_MESSAGE = 'bang zyou, aku mau pesen topaz only';
+
+/** Build the pre-filled WhatsApp order message for a CC preset without duplicating leading "CC ". */
 export function formatOrderMessage(preset: CCPreset): string {
-  return `Halo Zyou, saya mau pesan jasa Topaz / Color Correction memakai preset ${preset.name}.`;
+  const cleanName = preset.name.replace(/^cc\s+/i, '').trim();
+  return `bang zyou, aku mau pesen jastop cc ${cleanName}`;
+}
+
+/** Build a WhatsApp click-to-chat URL with a URL-encoded pre-filled message. */
+export function buildWhatsAppOrderUrl(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }

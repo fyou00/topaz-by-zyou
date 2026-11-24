@@ -3,7 +3,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CC_PRESETS, ORIGINAL_CLIP, formatOrderMessage } from '../src/data/presets.ts';
+import {
+  CC_PRESETS,
+  ORIGINAL_CLIP,
+  TOPAZ_ONLY_ORDER_MESSAGE,
+  WHATSAPP_NUMBER,
+  buildWhatsAppOrderUrl,
+  formatOrderMessage,
+} from '../src/data/presets.ts';
 import {
   VIDEO_BASE_URL,
   buildMediaUrl,
@@ -51,8 +58,20 @@ function main() {
     assert.ok(preset.posterFile.endsWith('.jpg'), `Poster preset ${preset.id} harus .jpg`);
     assert.ok(!seenIds.has(preset.id), `Duplikat preset id: ${preset.id}`);
     seenIds.add(preset.id);
-    assert.ok(formatOrderMessage(preset).includes(preset.name), 'Format order harus menyebut nama preset');
+    const cleanName = preset.name.replace(/^cc\s+/i, '').trim();
+    const orderMsg = formatOrderMessage(preset);
+    assert.equal(orderMsg, `bang zyou, aku mau pesen jastop cc ${cleanName}`);
+    assert.equal(
+      buildWhatsAppOrderUrl(orderMsg),
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderMsg)}`
+    );
   });
+
+  assert.equal(TOPAZ_ONLY_ORDER_MESSAGE, 'bang zyou, aku mau pesen topaz only');
+  assert.equal(
+    buildWhatsAppOrderUrl(TOPAZ_ONLY_ORDER_MESSAGE),
+    'https://wa.me/62895425075696?text=bang%20zyou%2C%20aku%20mau%20pesen%20topaz%20only'
+  );
 
   // 2. Validate video-manifest.json consistency and posters on disk
   const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));

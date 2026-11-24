@@ -1,22 +1,26 @@
 import { useState } from 'react';
-import { CC_PRESETS, formatOrderMessage } from './data/presets';
+import {
+  CC_PRESETS,
+  TOPAZ_ONLY_ORDER_MESSAGE,
+  buildWhatsAppOrderUrl,
+  formatOrderMessage,
+} from './data/presets';
+import videoManifest from './data/video-manifest.json';
+import { resolvePosterUrl } from './lib/media-url';
 import { VideoPresetShowcase } from './components/VideoPresetShowcase';
 
 export function App() {
   const [selectedPresetId, setSelectedPresetId] = useState(CC_PRESETS[0].id);
-  const [ctaCopied, setCtaCopied] = useState('');
+  const [heroSplit, setHeroSplit] = useState(50);
 
   const activePreset = CC_PRESETS.find((p) => p.id === selectedPresetId) ?? CC_PRESETS[0];
+  const heroCleanPoster = resolvePosterUrl('cc-soft-clean.jpg', videoManifest.version);
+  const heroSharpenPoster = resolvePosterUrl('sharpen-v2.jpg', videoManifest.version);
+  const heroOriginalPoster = resolvePosterUrl('original.jpg', videoManifest.version);
+  const heroFreshPoster = resolvePosterUrl('cc-soft-fresh.jpg', videoManifest.version);
 
-  const handleCopyFromClosing = async () => {
-    const msg = formatOrderMessage(activePreset);
-    try {
-      await navigator.clipboard.writeText(msg);
-      setCtaCopied(`Format pesan untuk ${activePreset.name} tersalin.`);
-    } catch {
-      setCtaCopied(msg);
-    }
-  };
+  const closingPresetOrderUrl = buildWhatsAppOrderUrl(formatOrderMessage(activePreset));
+  const closingTopazOrderUrl = buildWhatsAppOrderUrl(TOPAZ_ONLY_ORDER_MESSAGE);
 
   return (
     <>
@@ -77,34 +81,74 @@ export function App() {
             </div>
           </div>
 
-          <div className="hero__collage" aria-hidden="true">
+          <div className="hero__collage">
             <div className="polaroid-hero polaroid-hero--left">
               <div className="polaroid-hero__screen">
-                <div className="polaroid-hero__reticle" />
-                <span className="polaroid-hero__caption-in">Pratinjau klip</span>
+                <img
+                  className="polaroid-hero__img"
+                  src={heroCleanPoster}
+                  alt="Hasil color correction CC Soft Clean"
+                  width={720}
+                  height={720}
+                  loading="eager"
+                />
               </div>
               <span className="polaroid-hero__label">CC Soft Clean</span>
             </div>
 
             <div className="polaroid-hero polaroid-hero--right">
-              <div className="polaroid-hero__screen polaroid-hero__screen--loupe">
-                <div className="polaroid-hero__loupe" />
-                <span className="polaroid-hero__caption-in">Detail tajam</span>
+              <div className="polaroid-hero__screen">
+                <img
+                  className="polaroid-hero__img"
+                  src={heroSharpenPoster}
+                  alt="Hasil penajaman detail Topaz dan Sharpen V2"
+                  width={720}
+                  height={720}
+                  loading="eager"
+                />
               </div>
               <span className="polaroid-hero__label">Topaz + Sharpen</span>
             </div>
 
             <div className="polaroid-hero polaroid-hero--front">
               <div className="polaroid-hero__screen polaroid-hero__screen--split">
-                <div className="polaroid-hero__half polaroid-hero__half--raw">
-                  <span className="polaroid-hero__tag">Asli</span>
-                </div>
-                <div className="polaroid-hero__half polaroid-hero__half--cc">
-                  <span className="polaroid-hero__tag polaroid-hero__tag--dark">Topaz + CC</span>
-                </div>
-                <div className="polaroid-hero__divider" />
-                <div className="polaroid-hero__handle">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <img
+                  className="polaroid-hero__img"
+                  src={heroOriginalPoster}
+                  alt="Frame asli sebelum color correction"
+                  width={720}
+                  height={720}
+                  loading="eager"
+                />
+                <img
+                  className="polaroid-hero__img polaroid-hero__img--cc"
+                  src={heroFreshPoster}
+                  alt="Frame hasil Topaz dan CC Soft Fresh"
+                  width={720}
+                  height={720}
+                  loading="eager"
+                  style={{ clipPath: `inset(0 0 0 ${heroSplit}%)` }}
+                />
+                <span className="polaroid-hero__tag polaroid-hero__tag--left" aria-hidden="true">
+                  Asli
+                </span>
+                <span
+                  className="polaroid-hero__tag polaroid-hero__tag--dark polaroid-hero__tag--right"
+                  aria-hidden="true"
+                >
+                  Topaz + CC
+                </span>
+                <div
+                  className="polaroid-hero__divider"
+                  style={{ left: `${heroSplit}%` }}
+                  aria-hidden="true"
+                />
+                <div
+                  className="polaroid-hero__handle"
+                  style={{ left: `${heroSplit}%` }}
+                  aria-hidden="true"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
                       d="M5 3L1 7L5 11M9 3L13 7L9 11"
                       stroke="currentColor"
@@ -114,27 +158,18 @@ export function App() {
                     />
                   </svg>
                 </div>
+                <input
+                  type="range"
+                  min={5}
+                  max={95}
+                  value={heroSplit}
+                  aria-label="Geser perbandingan Asli dan Topaz + CC pada CC Soft Fresh"
+                  className="polaroid-hero__range"
+                  onChange={(e) => setHeroSplit(Number(e.target.value))}
+                />
               </div>
               <span className="polaroid-hero__label">CC Soft Fresh</span>
             </div>
-
-            <svg
-              className="hero__sparkle"
-              width="34"
-              height="34"
-              viewBox="0 0 34 34"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M12 4L14.5 11.5L22 14L14.5 16.5L12 24L9.5 16.5L2 14L9.5 11.5L12 4Z"
-                fill="currentColor"
-              />
-              <path
-                d="M27 0L28.4 4.2L32.6 5.6L28.4 7L27 11.2L25.6 7L21.4 5.6L25.6 4.2L27 0Z"
-                fill="currentColor"
-              />
-            </svg>
 
             <svg
               className="hero__plane"
@@ -280,16 +315,23 @@ export function App() {
               Kirim tautan klip dan nomor preset CC langsung ke Zyou untuk cek harga dan antrean.
             </p>
             <div className="closing-band__actions">
-              <button type="button" className="btn" onClick={handleCopyFromClosing}>
-                Salin format pesanan ({activePreset.number})
-              </button>
-              <span className="fill-contact">Isi WhatsApp atau IG @zyou</span>
+              <a
+                className="btn"
+                href={closingPresetOrderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Mau order? Klik ini
+              </a>
+              <a
+                className="btn btn--ghost-sky"
+                href={closingTopazOrderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Order Topaz only
+              </a>
             </div>
-            {ctaCopied ? (
-              <p className="closing-band__feedback" aria-live="polite">
-                {ctaCopied}
-              </p>
-            ) : null}
           </div>
         </section>
       </main>

@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { CC_PRESETS, ORIGINAL_CLIP, formatOrderMessage } from '../data/presets';
+import {
+  CC_PRESETS,
+  ORIGINAL_CLIP,
+  TOPAZ_ONLY_ORDER_MESSAGE,
+  buildWhatsAppOrderUrl,
+  formatOrderMessage,
+} from '../data/presets';
 import videoManifest from '../data/video-manifest.json';
 import { resolvePosterUrl, resolveVideoUrl } from '../lib/media-url';
 
@@ -43,7 +49,6 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [failedPosters, setFailedPosters] = useState<Record<string, boolean>>({});
-  const [orderCopiedMsg, setOrderCopiedMsg] = useState('');
 
   const activeIndex = useMemo(() => {
     const idx = CC_PRESETS.findIndex((p) => p.id === selectedPresetId);
@@ -221,47 +226,15 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
     }
   };
 
-  const handleCopyOrder = async () => {
-    const text = formatOrderMessage(activePreset);
-    try {
-      await navigator.clipboard.writeText(text);
-      setOrderCopiedMsg(`Format order untuk ${activePreset.name} tersalin.`);
-    } catch {
-      setOrderCopiedMsg(text);
-    }
-  };
+  const primaryOrderMessage =
+    viewMode === 'original' ? TOPAZ_ONLY_ORDER_MESSAGE : formatOrderMessage(activePreset);
+  const primaryOrderUrl = buildWhatsAppOrderUrl(primaryOrderMessage);
+  const topazOnlyOrderUrl = buildWhatsAppOrderUrl(TOPAZ_ONLY_ORDER_MESSAGE);
 
   const aspectRatioNum = mediaAspect.w > 0 && mediaAspect.h > 0 ? mediaAspect.w / mediaAspect.h : 16 / 9;
 
   return (
     <div className="showcase" ref={stageRef}>
-      <div className="showcase__bar">
-        <div className="showcase__sources" role="group" aria-label="Pilih tampilan klip">
-          <button
-            type="button"
-            className="btn btn--quiet"
-            aria-pressed={viewMode === 'original'}
-            onClick={() => handleSelectViewMode('original')}
-          >
-            Video Original
-          </button>
-          <button
-            type="button"
-            className="btn btn--quiet"
-            aria-pressed={viewMode === 'preset'}
-            onClick={() => handleSelectViewMode('preset')}
-          >
-            {activePreset.name}
-          </button>
-        </div>
-
-        <span className="showcase__honest-note">
-          {viewMode === 'original'
-            ? 'Klip mentah sebelum color correction'
-            : 'Hasil render asli langsung dari After Effects'}
-        </span>
-      </div>
-
       <div className="showcase__stage">
         <div className="showcase__stage-canvas">
           <div
@@ -320,6 +293,15 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
                   </code>{' '}
                   agar langsung tampil di sini.
                 </p>
+                {viewMode === 'original' ? (
+                  <button
+                    type="button"
+                    className="btn btn--quiet"
+                    onClick={() => handleSelectViewMode('preset')}
+                  >
+                    Kembali ke {activePreset.name}
+                  </button>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -438,13 +420,23 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
             <p className="showcase__honest-note">{activeClip.description}</p>
           </div>
           <div className="showcase__order-wrap">
-            <button type="button" className="btn" onClick={handleCopyOrder}>
-              Salin pesan order
-            </button>
-            {orderCopiedMsg ? (
-              <span className="showcase__feedback" aria-live="polite">
-                {orderCopiedMsg}
-              </span>
+            <a
+              className="btn"
+              href={primaryOrderUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Mau order? Klik ini
+            </a>
+            {viewMode === 'preset' ? (
+              <a
+                className="btn btn--quiet"
+                href={topazOnlyOrderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Topaz only
+              </a>
             ) : null}
           </div>
         </div>
