@@ -69,7 +69,7 @@ export function App() {
             </p>
             <div className="hero__actions">
               <a className="btn" href="#preset-cc">
-                Lihat 18 preset
+                Lihat 17 preset
               </a>
               <a className="btn btn--ghost-sky" href="#cara-pesan">
                 Cara pemesanan
@@ -157,9 +157,9 @@ export function App() {
         <section className="catalog" id="preset-cc">
           <div className="container">
             <div className="section-head">
-              <h2 className="section-head__title">Delapan belas preset pilihan</h2>
+              <h2 className="section-head__title">Tujuh belas preset pilihan</h2>
               <p className="section-head__lead">
-                Tonton langsung 18 hasil render asli After Effects dan Topaz Labs lalu bandingkan
+                Tonton langsung 17 hasil render asli After Effects lalu bandingkan
                 dengan video original sebelum memesan.
               </p>
             </div>

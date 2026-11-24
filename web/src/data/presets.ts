@@ -155,14 +155,6 @@ export const CC_PRESETS: CCPreset[] = [
     videoFile: 'Sharpen V2.mp4',
     posterFile: 'sharpen-v2.jpg',
   },
-  {
-    id: 'topaz',
-    number: '18',
-    name: 'TOPAZ',
-    description: 'Hasil peningkatan resolusi dan kebersihan detail Topaz Labs.',
-    videoFile: 'TOPAZ.mp4',
-    posterFile: 'topaz.jpg',
-  },
 ];
 
 export function formatOrderMessage(preset: CCPreset): string {

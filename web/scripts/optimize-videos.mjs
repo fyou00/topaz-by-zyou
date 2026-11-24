@@ -31,7 +31,7 @@ Opsi:
   -h, --help        Tampilkan bantuan ini
 
 Nama file yang dikenali (mengikuti src/data/presets.ts):
-  original.mp4 serta 18 file preset (CC BLUE BEATS.mp4 sampai TOPAZ.mp4, atau id preset)
+  original.mp4 serta 17 file preset (CC BLUE BEATS.mp4 sampai Sharpen V2.mp4, atau id preset)
 `);
 }
 

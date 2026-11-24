@@ -32,6 +32,7 @@ function formatTime(seconds: number): string {
 export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: VideoPresetShowcaseProps) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const resumeTimeRef = useRef(0);
   const wasPlayingRef = useRef(false);
 
@@ -44,10 +45,12 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
   const [failedPosters, setFailedPosters] = useState<Record<string, boolean>>({});
   const [orderCopiedMsg, setOrderCopiedMsg] = useState('');
 
-  const activePreset = useMemo(
-    () => CC_PRESETS.find((p) => p.id === selectedPresetId) ?? CC_PRESETS[0],
-    [selectedPresetId]
-  );
+  const activeIndex = useMemo(() => {
+    const idx = CC_PRESETS.findIndex((p) => p.id === selectedPresetId);
+    return idx >= 0 ? idx : 0;
+  }, [selectedPresetId]);
+
+  const activePreset = CC_PRESETS[activeIndex];
 
   const activeClip = viewMode === 'original' ? ORIGINAL_CLIP : activePreset;
   const activeManifest =
@@ -115,8 +118,33 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    stageRef.current?.scrollIntoView({
+    const isMobileViewport = window.matchMedia('(max-width: 44rem)').matches;
+
+    if (isMobileViewport) {
+      cardRefs.current[presetId]?.scrollIntoView({
+        behavior: reducedMotion ? 'auto' : 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    } else {
+      stageRef.current?.scrollIntoView({
+        behavior: reducedMotion ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
+    }
+  };
+
+  const handleStepPreset = (delta: -1 | 1) => {
+    const nextIndex = (activeIndex + delta + CC_PRESETS.length) % CC_PRESETS.length;
+    const nextPreset = CC_PRESETS[nextIndex];
+    capturePlaybackState();
+    setViewMode('preset');
+    onSelectPresetId(nextPreset.id);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cardRefs.current[nextPreset.id]?.scrollIntoView({
       behavior: reducedMotion ? 'auto' : 'smooth',
+      inline: 'center',
       block: 'nearest',
     });
   };
@@ -422,7 +450,63 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
         </div>
       </div>
 
-      <div className="preset-grid" role="group" aria-label="Pilihan 18 video preset">
+      <div className="preset-nav" aria-label="Navigasi urutan preset">
+        <div className="preset-nav__meta">
+          <span className="preset-nav__count num">
+            {activePreset.number} / {CC_PRESETS.length}
+          </span>
+          <span className="preset-nav__hint">
+            Geser kiri kanan atau pakai panah untuk ganti preset
+          </span>
+        </div>
+
+        <div className="preset-nav__actions">
+          <button
+            type="button"
+            className="btn btn--quiet showcase__icon-btn"
+            aria-label="Preset sebelumnya"
+            title="Preset sebelumnya"
+            onClick={() => handleStepPreset(-1)}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14.5 6.5L9 12l5.5 5.5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="btn btn--quiet showcase__icon-btn"
+            aria-label="Preset berikutnya"
+            title="Preset berikutnya"
+            onClick={() => handleStepPreset(1)}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9.5 6.5L15 12l-5.5 5.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="preset-grid" role="group" aria-label="Pilihan 17 video preset">
         {CC_PRESETS.map((preset) => {
           const isSelected = preset.id === activePreset.id;
           const entry = PRESET_MANIFEST[preset.id];
@@ -431,6 +515,9 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
           return (
             <button
               key={preset.id}
+              ref={(el) => {
+                cardRefs.current[preset.id] = el;
+              }}
               type="button"
               className="preset-card"
               aria-pressed={isSelected}

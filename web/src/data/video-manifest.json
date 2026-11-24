@@ -1,13 +1,13 @@
 {
-  "version": "1795452057512",
+  "version": "1795452057513",
   "original": {
     "file": "original.mp4",
     "poster": "original.jpg",
-    "hasPoster": false,
-    "width": 1080,
-    "height": 1080,
-    "duration": 0,
-    "sizeBytes": 0
+    "hasPoster": true,
+    "width": 720,
+    "height": 720,
+    "duration": 10.7,
+    "sizeBytes": 794736
   },
   "presets": {
     "cc-blue-beats": {
@@ -162,15 +162,6 @@
       "height": 720,
       "duration": 10.62,
       "sizeBytes": 1417762
-    },
-    "topaz": {
-      "file": "TOPAZ.mp4",
-      "poster": "topaz.jpg",
-      "hasPoster": true,
-      "width": 720,
-      "height": 720,
-      "duration": 10.7,
-      "sizeBytes": 794736
     }
   }
 }

@@ -652,7 +652,41 @@
   min-height: 1lh;
 }
 
-/* 9 Polaroid Preset Cards Grid */
+/* Preset Sequence Bar & Polaroid Preset Cards Grid */
+.preset-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.preset-nav__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.preset-nav__count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-md);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.preset-nav__hint {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.preset-nav__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
 .preset-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1178,7 +1212,50 @@
     align-items: flex-start;
   }
   .preset-grid {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    gap: var(--space-sm);
+    padding: 3px 2px var(--space-xs);
+    scrollbar-width: thin;
+  }
+  .preset-card {
+    flex: 0 0 116px;
+    scroll-snap-align: start;
+    padding: var(--space-xs);
+    gap: var(--space-xs);
+    border-radius: var(--radius-slot);
+  }
+  .preset-card__slot {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-polaroid);
+  }
+  .preset-card__chin {
+    flex-direction: column;
+    gap: 2px;
+    padding-inline: 2px;
+  }
+  .preset-card__name {
+    font-size: var(--text-xs);
+    line-height: 1.25;
+  }
+  .preset-card__desc {
+    display: none;
+  }
+  .preset-card__num {
+    font-size: var(--text-xs);
+  }
+  .preset-card__duration {
+    right: 4px;
+    bottom: 4px;
+    padding: 1px 5px;
+    font-size: 0.7rem;
+  }
+  .preset-nav__hint {
+    display: none;
   }
   .services__row {
     grid-template-columns: minmax(0, 1fr);
@@ -1202,11 +1279,18 @@
   .site-footer__right {
     align-items: flex-start;
   }
+  .showcase {
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
   .showcase__stage {
     padding: var(--space-sm);
   }
   .showcase__stage-canvas {
     padding: var(--space-xs);
+  }
+  .showcase__media-box {
+    width: min(100%, calc(min(44dvh, 316px) * var(--media-ar-num, 1)));
   }
   .showcase__video-bar {
     gap: var(--space-xs);

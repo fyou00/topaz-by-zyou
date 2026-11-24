@@ -35,12 +35,12 @@ function sumDirectoryBytes(dir) {
 }
 
 function main() {
-  // 1. Validate ORIGINAL_CLIP and 18 CC_PRESETS
+  // 1. Validate ORIGINAL_CLIP and 17 CC_PRESETS
   assert.equal(ORIGINAL_CLIP.id, 'original');
   assert.equal(ORIGINAL_CLIP.videoFile, 'original.mp4');
   assert.equal(ORIGINAL_CLIP.posterFile, 'original.jpg');
 
-  assert.equal(CC_PRESETS.length, 18, 'Harus tepat 18 preset pilihan');
+  assert.equal(CC_PRESETS.length, 17, 'Harus tepat 17 preset pilihan');
   const seenIds = new Set();
   CC_PRESETS.forEach((preset, idx) => {
     const expectedNum = String(idx + 1).padStart(2, '0');
