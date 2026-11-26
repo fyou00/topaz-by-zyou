@@ -58,9 +58,9 @@ function main() {
     assert.ok(preset.posterFile.endsWith('.jpg'), `Poster preset ${preset.id} harus .jpg`);
     assert.ok(!seenIds.has(preset.id), `Duplikat preset id: ${preset.id}`);
     seenIds.add(preset.id);
-    const cleanName = preset.name.replace(/^cc\s+/i, '').trim();
+    const cleanName = preset.name.replace(/^cc\s+/i, '').trim().toLowerCase();
     const orderMsg = formatOrderMessage(preset);
-    assert.equal(orderMsg, `bang zyou, aku mau pesen jastop cc ${cleanName}`);
+    assert.equal(orderMsg, `bang zyou, aku mau jastop pake cc ${cleanName}`);
     assert.equal(
       buildWhatsAppOrderUrl(orderMsg),
       `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderMsg)}`

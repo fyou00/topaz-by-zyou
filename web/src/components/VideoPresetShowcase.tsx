@@ -124,6 +124,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobileViewport = window.matchMedia('(max-width: 44rem)').matches;
+    const isStackedTabletViewport = window.matchMedia('(max-width: 64rem)').matches;
 
     if (isMobileViewport) {
       cardRefs.current[presetId]?.scrollIntoView({
@@ -131,7 +132,7 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
         inline: 'center',
         block: 'nearest',
       });
-    } else {
+    } else if (isStackedTabletViewport) {
       stageRef.current?.scrollIntoView({
         behavior: reducedMotion ? 'auto' : 'smooth',
         block: 'nearest',
@@ -234,8 +235,8 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
   const aspectRatioNum = mediaAspect.w > 0 && mediaAspect.h > 0 ? mediaAspect.w / mediaAspect.h : 16 / 9;
 
   return (
-    <div className="showcase" ref={stageRef}>
-      <div className="showcase__stage">
+    <div className="showcase">
+      <div className="showcase__stage" ref={stageRef}>
         <div className="showcase__stage-canvas">
           <div
             className="showcase__media-box"
@@ -442,123 +443,126 @@ export function VideoPresetShowcase({ selectedPresetId, onSelectPresetId }: Vide
         </div>
       </div>
 
-      <div className="preset-nav" aria-label="Navigasi urutan preset">
-        <div className="preset-nav__meta">
-          <span className="preset-nav__count num">
-            {activePreset.number} / {CC_PRESETS.length}
-          </span>
-          <span className="preset-nav__hint">
-            Geser kiri kanan atau pakai panah untuk ganti preset
-          </span>
-        </div>
+      <div className="showcase__catalog">
+        <div className="preset-nav" aria-label="Navigasi urutan preset">
+          <div className="preset-nav__meta">
+            <span className="preset-nav__count num">
+              {activePreset.number} / {CC_PRESETS.length}
+            </span>
+            <span className="preset-nav__hint">
+              Pilih preset di grid atau pakai panah untuk ganti preview
+            </span>
+          </div>
 
-        <div className="preset-nav__actions">
-          <button
-            type="button"
-            className="btn btn--quiet showcase__icon-btn"
-            aria-label="Preset sebelumnya"
-            title="Preset sebelumnya"
-            onClick={() => handleStepPreset(-1)}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M14.5 6.5L9 12l5.5 5.5" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="btn btn--quiet showcase__icon-btn"
-            aria-label="Preset berikutnya"
-            title="Preset berikutnya"
-            onClick={() => handleStepPreset(1)}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9.5 6.5L15 12l-5.5 5.5" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div className="preset-grid" role="group" aria-label="Pilihan 17 video preset">
-        {CC_PRESETS.map((preset) => {
-          const isSelected = preset.id === activePreset.id;
-          const entry = PRESET_MANIFEST[preset.id];
-          const showPoster = Boolean(entry?.hasPoster && !failedPosters[preset.id]);
-
-          return (
+          <div className="preset-nav__actions">
             <button
-              key={preset.id}
-              ref={(el) => {
-                cardRefs.current[preset.id] = el;
-              }}
               type="button"
-              className="preset-card"
-              aria-pressed={isSelected}
-              onClick={() => handleSelectPresetCard(preset.id)}
+              className="btn btn--quiet showcase__icon-btn"
+              aria-label="Preset sebelumnya"
+              title="Preset sebelumnya"
+              onClick={() => handleStepPreset(-1)}
             >
-              <figure className="preset-card__slot" data-slot={preset.id}>
-                {showPoster ? (
-                  <img
-                    className="preset-card__thumb"
-                    src={resolvePosterUrl(preset.posterFile, videoManifest.version)}
-                    alt={`Cuplikan hasil ${preset.name}`}
-                    width={400}
-                    height={250}
-                    loading="lazy"
-                    onError={() =>
-                      setFailedPosters((prev) => ({
-                        ...prev,
-                        [preset.id]: true,
-                      }))
-                    }
-                  />
-                ) : (
-                  <div className="preset-card__placeholder">
-                    <span className="preset-card__play-badge" aria-hidden="true">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M7 5L15 10L7 15V5Z" fill="currentColor" />
-                      </svg>
-                    </span>
-                    <span className="preset-card__slot-label">{preset.name}</span>
-                    <span className="preset-card__slot-hint">Klik untuk putar di atas</span>
-                  </div>
-                )}
-
-                {entry && entry.duration > 0 ? (
-                  <span className="preset-card__duration num" data-keep="true">
-                    {formatTime(entry.duration)}
-                  </span>
-                ) : null}
-              </figure>
-              <div className="preset-card__chin">
-                <div>
-                  <h3 className="preset-card__name">{preset.name}</h3>
-                  <p className="preset-card__desc">{preset.description}</p>
-                </div>
-                <span className="preset-card__num num">{preset.number}</span>
-              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M14.5 6.5L9 12l5.5 5.5" />
+              </svg>
             </button>
-          );
-        })}
+            <button
+              type="button"
+              className="btn btn--quiet showcase__icon-btn"
+              aria-label="Preset berikutnya"
+              title="Preset berikutnya"
+              onClick={() => handleStepPreset(1)}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9.5 6.5L15 12l-5.5 5.5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div className="preset-grid" role="group" aria-label="Pilihan 17 video preset">
+          {CC_PRESETS.map((preset) => {
+            const isSelected = preset.id === activePreset.id;
+            const entry = PRESET_MANIFEST[preset.id];
+            const showPoster = Boolean(entry?.hasPoster && !failedPosters[preset.id]);
+
+            return (
+              <button
+                key={preset.id}
+                ref={(el) => {
+                  cardRefs.current[preset.id] = el;
+                }}
+                type="button"
+                className="preset-card"
+                aria-pressed={isSelected}
+                title={`${preset.number} ${preset.name}: ${preset.description}`}
+                onClick={() => handleSelectPresetCard(preset.id)}
+              >
+                <figure className="preset-card__slot" data-slot={preset.id}>
+                  {showPoster ? (
+                    <img
+                      className="preset-card__thumb"
+                      src={resolvePosterUrl(preset.posterFile, videoManifest.version)}
+                      alt={`Cuplikan hasil ${preset.name}`}
+                      width={400}
+                      height={250}
+                      loading="lazy"
+                      onError={() =>
+                        setFailedPosters((prev) => ({
+                          ...prev,
+                          [preset.id]: true,
+                        }))
+                      }
+                    />
+                  ) : (
+                    <div className="preset-card__placeholder">
+                      <span className="preset-card__play-badge" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M7 5L15 10L7 15V5Z" fill="currentColor" />
+                        </svg>
+                      </span>
+                      <span className="preset-card__slot-label">{preset.name}</span>
+                      <span className="preset-card__slot-hint">Klik untuk lihat preview</span>
+                    </div>
+                  )}
+
+                  {entry && entry.duration > 0 ? (
+                    <span className="preset-card__duration num" data-keep="true">
+                      {formatTime(entry.duration)}
+                    </span>
+                  ) : null}
+                </figure>
+                <div className="preset-card__chin">
+                  <div>
+                    <h3 className="preset-card__name">{preset.name}</h3>
+                    <p className="preset-card__desc">{preset.description}</p>
+                  </div>
+                  <span className="preset-card__num num">{preset.number}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
